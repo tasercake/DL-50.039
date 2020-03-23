@@ -3,17 +3,10 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
-import skimage
-from skimage import io
-from operator import itemgetter
-from more_itertools import unique_everseen
-from natsort import natsorted
 from PIL import Image
 
 import torch
 from torch.utils.data import Dataset
-# from bs4 import BeautifulSoup
-# import matplotlib.pyplot as plt
 
 
 class PascalVOC:
