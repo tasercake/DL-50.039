@@ -150,44 +150,44 @@ trainer.fit(model, train_dataloader=train_dataloader, val_dataloaders=val_datalo
 
 **Mean Tail Accuracy**: `0.9116`
 
-<img src="output_18_12.png" alt="png" style="zoom:150%;" />
+<img src="report/output_18_12.png" alt="png" style="zoom:150%;" />
 
 **Class-wise Top-5 and Bottom-5 samples**
 
-![png](output_18_1.png)
+![png](report/output_18_1.png)
 
 
 
-![png](output_18_2.png)
+![png](report/output_18_2.png)
 
 
 
-![png](output_18_3.png)
+![png](report/output_18_3.png)
 
 
 
-![png](output_18_4.png)
+![png](report/output_18_4.png)
 
 
 
-![png](output_18_5.png)
+![png](report/output_18_5.png)
 
 
 
-![png](output_18_6.png)
+![png](report/output_18_6.png)
 
 
 
-![png](output_18_7.png)
+![png](report/output_18_7.png)
 
 
 
-![png](output_18_8.png)
+![png](report/output_18_8.png)
 
 
 
-![png](output_18_9.png)
+![png](report/output_18_9.png)
 
 
 
-![png](output_18_10.png)
+![png](report/output_18_10.png)
