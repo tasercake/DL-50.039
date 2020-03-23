@@ -151,7 +151,7 @@ class VOCDataset(Dataset):
         image = Image.open(file)
         if self.transform:
             image = self.transform(image)
-        return image, self._one_hot(labels)
+        return image, self._one_hot(labels), str(file)
 
     def __len__(self):
         return len(self.samples)
