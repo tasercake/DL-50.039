@@ -27,7 +27,7 @@ def load_concepts(file):
 
 def load_imageclef_dataset(imageclef_dir, labels_file):
     with labels_file.open("r") as f:
-        lines = [line.rstrip().split() for line in f.readlines()][:800]
+        lines = [line.rstrip().split() for line in f.readlines()]
 
     labels_map = {l[0]: [int(i) for i in l[1:]] for l in lines}
     features_map = dict(
@@ -52,19 +52,20 @@ if __name__ == "__main__":
         f.write("\n".join(CLASSES) + "\n")
 
     dataset = defaultdict(lambda: [])
-    for name in CLASSES:
-        index = concept_indices[name]
-        x, y = features[:, index], labels[:, index]
+    indices = [concept_indices[name] for name in CLASSES]
+    for index in indices:
+        x = features[labels[:, index] == 1]
+        y = labels[labels[:, index] == 1][:, indices]
 
         train_ratio = TRAIN
         val_ratio = VAL / (1 - train_ratio)
         test_ratio = TEST / (1 - train_ratio)
 
         x_train, x_rest, y_train, y_rest = train_test_split(
-            x, y, train_size=train_ratio, stratify=y
+            x, y, train_size=train_ratio
         )
         x_val, x_test, y_val, y_test = train_test_split(
-            x_rest, y_rest, train_size=val_ratio, stratify=y_rest
+            x_rest, y_rest, train_size=val_ratio
         )
         dataset["x_train"].append(x_train)
         dataset["x_val"].append(x_val)
@@ -73,7 +74,7 @@ if __name__ == "__main__":
         dataset["y_val"].append(y_val)
         dataset["y_test"].append(y_test)
 
-    dataset = {k: np.array(v) for k, v in dataset.items()}
+    dataset = {k: np.vstack(v) for k, v in dataset.items()}
     for filename, subset in dataset.items():
         np.save(OUTPUT_DIR / filename, subset)
     print({k: v.shape for k, v in dataset.items()})

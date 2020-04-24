@@ -1,0 +1,6 @@
+torch
+torchvision
+Pillow==6.2.2
+numpy
+natsort
+scikit-image

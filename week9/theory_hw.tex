@@ -1,0 +1,84 @@
+\documentclass[9pt]{paper}
+
+\usepackage{cite}
+\usepackage{comment}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage[thinc]{esdiff}
+\usepackage[margin=0.8in,bottom=1.25in,columnsep=.4in]{geometry}
+
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\setcounter{secnumdepth}{3}
+\title{
+	50.039 -  Theory and Practice of Deep Learning\\
+	Week 9 Homework
+}
+
+\author{Krishna Penukonda - 1001781}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Task 1}
+
+\subsection*{Figure 1}
+
+\begin{enumerate}
+
+\item
+\begin{equation*}
+\diffp{E}{{n_4}} = \diffp{E}{{n_6}} \cdot \diffp{{n_6}}{{n_4}}
+\end{equation*}
+
+\item
+\begin{equation*}
+\diffp{E}{{w_{2,5}}} = \diffp{E}{{n_7}} \cdot \diffp{{n_7}}{{n_5}} \cdot \diffp{{n_5}}{{w_{2,5}}}
+\end{equation*}
+
+\item
+\begin{equation*}
+\diffp{E}{{(v_{1,1})_d}} = \diffp{E}{{n_6}} \cdot \diffp{{n_1}}{{(v_{1,1})_d}} \cdot \left[\diffp{n_6}{{n_3}} \cdot \diffp{n_3}{{n_1}} + \diffp{n_6}{{n_4}} \cdot \diffp{n_4}{{n_1}}\right]
+\end{equation*}
+
+\item
+\begin{equation*}
+\diffp{E}{{(x_2)_d}} = \diffp{n_2}{{(x_2)_d}} \cdot \left[\diffp{E}{{n_6}} \cdot \diffp{n_6}{{n_4}} \cdot \diffp{n_4}{{n_2}} + \diffp{E}{{n_7}} \cdot \diffp{n_7}{{n_5}} \cdot \diffp{n_5}{{n_2}}\right]
+\end{equation*}
+
+\end{enumerate}
+
+\subsection*{Figure 2}
+
+\begin{enumerate}
+
+\item
+\begin{equation*}
+\diffp{E}{{(v_{2,2})_d}} = \diffp{E}{{n_6}} \cdot \diffp{{n_6}}{{n_4}} \cdot \diffp{{n_4}}{{n_2}} \cdot \diffp{{n_2}}{{(v_{2,2})_d}}
+\end{equation*}
+
+\item
+\begin{equation*}
+\diffp{E}{{w_{2,4}}} = \diffp{E}{{n_4}} \cdot \diffp{{n_4}}{{w_{(2,4)}}} \cdot \diffp{{n_5}}{{w_{2,5}}}
+\end{equation*}
+
+\item
+\begin{equation*}
+\diffp{E}{{n_1}} = \diffp{n_3}{{n_1}} \cdot \left[\diffp{E}{{n_6}} \cdot \diffp{n_6}{{n_3}} + \diffp{E}{{n_8}} \cdot \diffp{n_8}{{n_3}} \right]
+\end{equation*}
+
+\end{enumerate}
+
+\section*{Task 2}
+
+Let $C_{i, i+1}$ be the number of connections to a neuron in layer $i+1$. Then the number of terms is
+\begin{equation*}
+N = {\prod_{i=1}^{K} C_{i,i+1}}
+\end{equation*}
+
+\end{document}

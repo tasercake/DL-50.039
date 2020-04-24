@@ -1,0 +1,201 @@
+\documentclass[9pt]{paper}
+
+\usepackage{cite}
+\usepackage{comment}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage[thinc]{esdiff}
+\usepackage[margin=0.8in,bottom=1.25in,columnsep=.4in]{geometry}
+
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\setcounter{secnumdepth}{3}
+\title{
+	50.039 -  Theory and Practice of Deep Learning\\
+	Week 8 Homework
+}
+
+\author{Krishna Penukonda - 1001781}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Task 1 - LSTM}
+
+\subsection{Is Previous Cell State $c_{t-1}$ a function of the Hidden State $h_{t-1}$?}
+$c_t$ is a function of $h_{t-1}$.
+Previous cell state $c_{t-1}$ can thus be written as:
+\begin{equation*}
+	c_{t-1} = f_{t-1} \circ c_{t - 2} + i_{t-1} \circ \tanh(W^c x_{t-1} + U^c h_{t - 2})
+\end{equation*}
+$c_{t-1}$ is therefore \emph{not} a function of $h_{t-1}$.
+
+\subsection{Derivative of the Hidden State}
+Current hidden state:
+\begin{equation}
+	h_t = o_t \circ \tanh(c_t)
+\end{equation}
+Current cell state:
+\begin{equation}
+	c_t = f_t \circ c_{t-1} + i_t \circ u_t
+\end{equation}
+Expanding eq. (1) using the value of $c_t$ from eq. (2),
+\begin{equation}
+	h_t = o_t \circ \tanh(f_t \circ c_{t-1} + i_t \circ u_t)
+\end{equation}
+Taking the derivative of eq. (3) w.r.t $h_{t-1}$,
+\begin{equation}
+    \diffp{h_t}{{h_{t-1}}} = \diffp{o_t}{{h_{t-1}}} \circ \tanh(c_t) + \\
+    o_t \circ \left( \left[
+        c_{t-1} \circ \diffp{f_t}{{h_{t-1}}} +
+        f_t \circ \diffp{{c_{t-1}}}{{h_{t-1}}} +
+        i_t \circ \diffp{u_t}{{h_{t-1}}} +
+        u_t \circ \diffp{i_t}{{h_{t-1}}}
+    \right] (1 - \tanh^2(c_t)) \right)
+\end{equation}
+We know that $c_{t-1}$ is not a function of $h_{t-1}$. Therefore,
+\begin{equation}
+	\diffp{{c_{t-1}}}{{h_{t-1}}} = 0
+\end{equation}
+Substituting (5) into (4), we get the final result:
+\begin{equation*}
+	\diffp{h_t}{{h_{t-1}}} = \diffp{o_t}{{h_{t-1}}} \circ \tanh(c_t) + \\
+	o_t \circ \left( \left[
+		c_{t-1} \circ \diffp{f_t}{{h_{t-1}}} +
+		i_t \circ \diffp{u_t}{{h_{t-1}}} +
+		u_t \circ \diffp{i_t}{{h_{t-1}}}
+	\right] (1 - \tanh^2(c_t)) \right)
+\end{equation*}
+
+\subsection{Sigmoid derivative}
+\begin{equation}
+\begin{split}
+	\sigma(z) &= \frac{1}{1+e^{-z}}\\
+	\implies\diff{\sigma(z)}{z} &= \frac{1}{e^z}\cdot\frac{1}{(1+e^{-z})^2}\\
+	           &= \frac{1}{1+e^{-z}}\cdot\frac{e^{-z}}{1+e^{-z}}\\
+	           &= \sigma(z)\left(\frac{1+e^{-z}}{1+e^{-z}} - \frac{1}{1+e^{-z}}\right)\\
+	           &= \sigma(z)(1 - \sigma(z))\\
+\end{split}
+\end{equation}
+
+\subsection{Derivative of the Forget Gate}
+\begin{equation*}
+\begin{split}
+	f_t &= \sigma(W^f x_t + U^f h_{t-1})\\
+	\implies \diffp{f_t}{{h_{t-1}}} &= \diffp{(W^f x_t + U^f h_{t-1})}{{h_{t-1}}} \cdot \sigma'(W_{f}{x_{t}} + U_{f}{h_{t-1}})\\
+	&= U^f \cdot \sigma'(W_{f}{x_{t}} + U_{f}{h_{t-1}})\\
+\end{split}
+\end{equation*}
+Using the derivative of $\sigma(z)$ we calculated in eq. (6),
+\begin{equation}
+	\diffp{f_t}{{h_{t-1}}} = U_f\\
+	\cdot\sigma(W_f x_{t} + U_f{h_{t-1}})\\
+	\cdot(1 - \sigma(W_{f}{x_{t}} + U_{f}{h_{t-1}}))\\
+\end{equation}
+
+\subsection{Gate Activation}
+-
+
+\section{Task 2 - Convolution}
+\subsection{Feature Map Spatial Size}
+\begin{equation}
+	D_{out} = \floor*{\frac{D_{in} + 2P - k}{S} + 1}
+\end{equation}
+Where:
+\begin{description}
+\item $D_{out}$ is the output dimension
+\item $D_{in}$ is the input dimension
+\item $P$ is the padding size
+\item $k$ is the kernel size
+\item $S$ is the stride length
+\end{description}
+\subsubsection{}
+\begin{multicols}{5}
+$H_{in}=78$,\break
+$W_{in}=84$,\break
+$P=2$,\break
+$k=(5, 5)$,\break
+$S=3$
+\end{multicols}
+\begin{multicols}{2}
+\begin{equation*}
+\begin{split}
+	H_{out} &= \floor*{\frac{78 + 2\cdot2 - 5}{3} + 1}\\
+		&= \floor*{\frac{77}{3} + 1}\\
+		&=26
+\end{split}
+\end{equation*}\break
+\begin{equation*}
+\begin{split}
+	W_{out} &= \floor*{\frac{84 + 2\cdot2 - 5 }{3} + 1}\\
+		&= \floor*{\frac{83}{3} + 1}\\
+		&=28
+\end{split}
+\end{equation*}	
+\end{multicols}
+
+\subsubsection{}
+\begin{multicols}{5}
+$H_{in}=64$,\break
+$W_{in}=64$,\break
+$P=0$,\break
+$k=(3, 5)$,\break
+$S=2$
+\end{multicols}
+
+\begin{multicols}{2}
+\begin{equation*}
+\begin{split}
+	H_{out} &= \floor*{\frac{64 + 2\cdot0 - 3}{2} + 1}\\
+		&= \floor*{\frac{63}{2} + 1}\\
+		&=32
+\end{split}
+\end{equation*}\break
+\begin{equation*}
+\begin{split}
+	W_{out} &= \floor*{\frac{64 + 2\cdot0 - 5}{2} + 1}\\
+		&= \floor*{\frac{61}{2} + 1}\\
+		&=31
+\end{split}
+\end{equation*}
+\end{multicols}
+
+\subsubsection{}
+\begin{multicols}{5}
+$D_{out}=16$,\break
+$P=1$,\break
+$k=9$,\break
+$S=3$
+\end{multicols}
+
+\begin{equation*}
+\begin{split}
+	&\floor*{\frac{D_{in} + 2\cdot1 - 9}{3} + 1} = 16\\
+	\implies&\floor*{\frac{D_{in} - 4}{3}} = 16\\
+	\implies&D_{in} = (16\cdot3)+4 = 52
+\end{split}
+\end{equation*}
+
+
+\subsection{Trainable Parameters}
+Trainable parameters = $Channels_{in} * Kernel_x * Kernel_y * Channels_{out}$
+
+\noindent Multiplications = $Channels_{in} * Kernel_x * Kernel_y * Channels_{out} * H_{out} * W_{out}$
+
+\noindent Sum operations = $Channels_{in} * Channels_{out} * H_{out} * W_{out}$
+
+\subsubsection{}
+Trainable parameters = $32 * 7 * 7 * 64 = 100352$
+
+\noindent Multiplications = $32 * 7 * 7 * 64 * 5 * 5 = 2508800$
+
+\noindent Sum operations = $32 * 64 * 5 * 5 = 51200$
+
+\subsubsection{}
+Trainable parameters = $512 * 1 * 1 * 128 = 65536$
+\end{document}
